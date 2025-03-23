@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Kemasukan, Modal & Untung</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
+      margin: 0;
+      padding: 0;
       background: #eef2f3;
       overflow-x: hidden;
     }
@@ -241,7 +244,7 @@
   </table>
 </div>
 
-<!-- Skrip untuk Pie Chart -->
+<!-- Skrip untuk Pie Chart (simpan instans dalam pembolehubah global) -->
 <script>
   let pieChart;
   const ctx = document.getElementById('pieChart').getContext('2d');
@@ -259,6 +262,7 @@
 
 <!-- Skrip Sync Google Sheets CSV, kemaskini Statistik & Pie Chart -->
 <script>
+  // Global untuk simpan nilai numerik
   let incomeTotal = 0, expenseTotal = 0;
   let incomeFetched = false, expenseFetched = false;
 
@@ -267,6 +271,8 @@
       const profit = incomeTotal - expenseTotal;
       const formattedProfit = profit.toLocaleString('en-MY', { style: 'currency', currency: 'MYR', minimumFractionDigits: 0 });
       document.getElementById('profitStat').innerText = formattedProfit;
+      
+      // Kemas kini data untuk pie chart
       if (pieChart) {
         pieChart.data.datasets[0].data = [incomeTotal, expenseTotal, profit];
         pieChart.update();
@@ -274,13 +280,15 @@
     }
   }
 
+  // Fungsi untuk parse CSV secara asas
   function parseCSV(csv) {
     const rows = csv.split('\n').filter(row => row.trim() !== '');
     return rows.map(row =>
-      row.split(/,(?=(?:(?:[^"]"){2})[^"]*$)/).map(cell => cell.trim())
+      row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.trim())
     );
   }
 
+  // Fungsi untuk kemaskini jadual dari CSV, tambah baris jumlah dan update statistik
   function updateTableFromCSV(url, tableElement, totalLabel, cardElement, type) {
     fetch(url)
       .then(response => response.text())
@@ -289,19 +297,12 @@
         let html = '';
         csvData.forEach((row, index) => {
           if(index === 0) {
-            html += '<tr>' + row.map(cell => <th>${cell}</th>).join('') + '</tr>';
+            html += '<tr>' + row.map(cell => `<th>${cell}</th>`).join('') + '</tr>';
           } else {
-            const rowHtml = row.map(cell => {
-              // Jika sel mengandungi "elaun petugas" (tanpa mengira huruf besar/kecil),
-              // gunakan nilai asal sel untuk dipaparkan dalam pautan.
-              if(cell.trim().toLowerCase().includes('elaun petugas')) {
-                return <td><a href="https://docs.google.com/spreadsheets/d/1AuaOFILTD-AjzZ7OLzGBdVLaILcU1ol78vByW4DI9XU/edit?usp=sharing" target="_blank" style="color: blue; text-decoration: underline;">${cell}</a></td>;
-              }
-              return <td>${cell}</td>;
-            }).join('');
-            html += <tr>${rowHtml}</tr>;
+            html += '<tr>' + row.map(cell => `<td>${cell}</td>`).join('') + '</tr>';
           }
         });
+        // Kira jumlah dari lajur terakhir (nilai wang)
         let totalSum = 0;
         for (let i = 1; i < csvData.length; i++) {
           let cell = csvData[i][csvData[i].length - 1];
@@ -310,13 +311,15 @@
         }
         const formattedTotal = totalSum.toLocaleString('en-MY', { style: 'currency', currency: 'MYR', minimumFractionDigits: 0 });
         const cols = csvData[0].length;
-        html += <tr><th colspan="${cols - 1}">${totalLabel}</th><th>${formattedTotal}</th></tr>;
+        html += `<tr><th colspan="${cols - 1}">${totalLabel}</th><th>${formattedTotal}</th></tr>`;
         tableElement.innerHTML = html;
         
+        // Kemas kini statistik jika elemen disediakan
         if (cardElement) {
           cardElement.innerText = formattedTotal;
         }
         
+        // Simpan nilai numerik untuk pengiraan untung
         if (type === 'income') {
           incomeTotal = totalSum;
           incomeFetched = true;
@@ -331,6 +334,7 @@
 
   document.addEventListener('DOMContentLoaded', function() {
     const tables = document.querySelectorAll('table');
+    // Jadual pertama: Kemasukan; Jadual kedua: Perbelanjaan
     const incomeTable = tables[0];
     const expenseTable = tables[1];
     const incomeStat = document.getElementById('incomeStat');
