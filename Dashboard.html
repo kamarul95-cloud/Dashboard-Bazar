@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Kemasukan, Modal & Untung</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eef2f3;
+      overflow-x: hidden;
+    }
+    .container {
+      width: 90%;
+      margin: auto;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    /* Bahagian Statistik Diubah Suai */
+    .stats {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    .top-row {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .top-row .card {
+      flex: 1;
+      text-align: center;
+    }
+    .bottom-row {
+      width: 50%;
+    }
+    .bottom-row .card {
+      text-align: center;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    .card p {
+      font-size: 1.1rem;
+      margin: 8px 0;
+      color: #007bff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #a3d9a5;
+      text-align: center;
+    }
+    th {
+      background: #2e7d32;
+      color: #fff;
+    }
+    tr:nth-child(odd) {
+      background: #e8f5e9;
+    }
+    tr:nth-child(even) {
+      background: #fff;
+    }
+    .link-btn {
+      display: block;
+      text-align: center;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: #007bff;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 25px;
+      width: fit-content;
+      transition: background 0.3s ease;
+    }
+    .link-btn:hover {
+      background: #0056b3;
+    }
+    .chart-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    #pieChart {
+      max-width: 250px;
+      max-height: 250px;
+    }
+    /* Media Query untuk skrin kecil */
+    @media (max-width: 768px) {
+      .container {
+        width: 100%;
+        padding: 10px;
+      }
+      table th, table td {
+        padding: 8px;
+        font-size: 0.9rem;
+      }
+      .bottom-row {
+        width: 100%;
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Dashboard Kemasukan, Perbelanjaan & Untung Bazar Aidilfitri Batu 6</h2>
+
+  <!-- Graf Pie -->
+  <div class="chart-container">
+    <canvas id="pieChart"></canvas>
+  </div>
+
+  <!-- Bahagian Statistik (Top Row: Kemasukan & Perbelanjaan; Bottom Row: Untung) -->
+  <div class="stats">
+    <div class="top-row">
+      <div class="card">
+        <h3>Jumlah Kemasukan</h3>
+        <p id="incomeStat">RM0</p>
+      </div>
+      <div class="card">
+        <h3>Jumlah Perbelanjaan</h3>
+        <p id="expenseStat">RM0</p>
+      </div>
+    </div>
+    <div class="bottom-row">
+      <div class="card">
+        <h3>Jumlah Untung</h3>
+        <p id="profitStat">RM0</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Jadual Kemasukan -->
+  <h3>Data Kemasukan</h3>
+  <table>
+    <tr>
+      <th>Kemasukan</th>
+      <th>Unit</th>
+      <th>Harga Unit (RM)</th>
+      <th>Jumlah (RM)</th>
+    </tr>
+    <tr>
+      <td>Tapak Biasa</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Tapak Gerai (Tuan Kedai)</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Tapak Gerai (Orang Lain)</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th colspan="3">Jumlah Kemasukan</th>
+      <th>0</th>
+    </tr>
+  </table>
+
+  <!-- Hyperlink Senarai Peniaga dan Tapak -->
+  <a href="https://bazar-aidilfitri-bt6.netlify.app/" target="_blank" class="link-btn">🛍️ Senarai Peniaga & Tapak</a>
+
+  <!-- Jadual Perbelanjaan -->
+  <h3>Data Perbelanjaan</h3>
+  <table>
+    <tr>
+      <th>Perbelanjaan / Modal</th>
+      <th>Unit</th>
+      <th>Harga Unit (RM)</th>
+      <th>Jumlah (RM)</th>
+    </tr>
+    <tr>
+      <td>Permit Tapak MBKT</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Deposit</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Sampah</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Lampu</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Pengurusan</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <!-- Baris Elaun Petugas akan diproses melalui CSV -->
+    <tr>
+      <td>Lain-lain</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th colspan="3">Jumlah Perbelanjaan</th>
+      <th>RM0</th>
+    </tr>
+  </table>
+</div>
+
+<!-- Skrip untuk Pie Chart (simpan instans dalam pembolehubah global) -->
+<script>
+  let pieChart;
+  const ctx = document.getElementById('pieChart').getContext('2d');
+  pieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Jumlah Kemasukan', 'Jumlah Perbelanjaan', 'Jumlah Untung'],
+      datasets: [{
+        data: [43300, 30780, 12520],
+        backgroundColor: ['#007bff', '#ff6f61', '#4caf50'],
+      }]
+    }
+  });
+</script>
+
+<!-- Skrip Sync Google Sheets CSV, kemaskini Statistik & Pie Chart -->
+<script>
+  // Global untuk simpan nilai numerik
+  let incomeTotal = 0, expenseTotal = 0;
+  let incomeFetched = false, expenseFetched = false;
+
+  function updateProfit() {
+    if (incomeFetched && expenseFetched) {
+      const profit = incomeTotal - expenseTotal;
+      const formattedProfit = profit.toLocaleString('en-MY', { style: 'currency', currency: 'MYR', minimumFractionDigits: 0 });
+      document.getElementById('profitStat').innerText = formattedProfit;
+      
+      // Kemas kini data untuk pie chart
+      if (pieChart) {
+        pieChart.data.datasets[0].data = [incomeTotal, expenseTotal, profit];
+        pieChart.update();
+      }
+    }
+  }
+
+  // Fungsi untuk parse CSV secara asas
+  function parseCSV(csv) {
+    const rows = csv.split('\n').filter(row => row.trim() !== '');
+    return rows.map(row =>
+      row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.trim())
+    );
+  }
+
+  // Fungsi untuk kemaskini jadual dari CSV, tambah baris jumlah dan update statistik
+  function updateTableFromCSV(url, tableElement, totalLabel, cardElement, type) {
+    fetch(url)
+      .then(response => response.text())
+      .then(data => {
+        const csvData = parseCSV(data);
+        let html = '';
+        csvData.forEach((row, index) => {
+          if (index === 0) {
+            html += '<tr>' + row.map(cell => `<th>${cell}</th>`).join('') + '</tr>';
+          } else {
+            html += '<tr>';
+            row.forEach((cell, cellIndex) => {
+              // Jika sel pertama ialah "ELAUN PETUGAS", tukar kepada hyperlink
+              if (cellIndex === 0 && cell.trim() === "ELAUN PETUGAS") {
+                html += `<td><a href="https://docs.google.com/spreadsheets/d/1AuaOFILTD-AjzZ7OLzGBdVLaILcU1ol78vByW4DI9XU/edit?usp=sharing" target="_blank">${cell}</a></td>`;
+              } else {
+                html += `<td>${cell}</td>`;
+              }
+            });
+            html += '</tr>';
+          }
+        });
+        // Kira jumlah dari lajur terakhir (nilai wang)
+        let totalSum = 0;
+        for (let i = 1; i < csvData.length; i++) {
+          let cell = csvData[i][csvData[i].length - 1];
+          let value = cell.replace(/[^0-9.-]+/g, '');
+          totalSum += parseFloat(value) || 0;
+        }
+        const formattedTotal = totalSum.toLocaleString('en-MY', { style: 'currency', currency: 'MYR', minimumFractionDigits: 0 });
+        const cols = csvData[0].length;
+        html += `<tr><th colspan="${cols - 1}">${totalLabel}</th><th>${formattedTotal}</th></tr>`;
+        tableElement.innerHTML = html;
+        
+        // Kemas kini statistik jika elemen disediakan
+        if (cardElement) {
+          cardElement.innerText = formattedTotal;
+        }
+        
+        // Simpan nilai numerik untuk pengiraan untung
+        if (type === 'income') {
+          incomeTotal = totalSum;
+          incomeFetched = true;
+        } else if (type === 'expense') {
+          expenseTotal = totalSum;
+          expenseFetched = true;
+        }
+        updateProfit();
+      })
+      .catch(error => console.error('Error fetching CSV:', error));
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const tables = document.querySelectorAll('table');
+    // Jadual pertama: Kemasukan; Jadual kedua: Perbelanjaan
+    const incomeTable = tables[0];
+    const expenseTable = tables[1];
+    const incomeStat = document.getElementById('incomeStat');
+    const expenseStat = document.getElementById('expenseStat');
+    
+    const incomeCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vThrBgKpqBgKp0xk81AhDmKahmpFZm-y3ZzARip3JkcfWl_fm7KZRf8BI08pL7i1Y1Y5C-aoly9ArfG/pub?gid=114023266&single=true&output=csv';
+    const expenseCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vThrBgKpqBgKp0xk81AhDmKahmpFZm-y3ZzARip3JkcfWl_fm7KZRf8BI08pL7i1Y1Y5C-aoly9ArfG/pub?gid=2098639772&single=true&output=csv';
+    
+    updateTableFromCSV(incomeCSVUrl, incomeTable, 'Jumlah Kemasukan', incomeStat, 'income');
+    updateTableFromCSV(expenseCSVUrl, expenseTable, 'Jumlah Perbelanjaan', expenseStat, 'expense');
+  });
+</script>
+
+</body>
+</html>
